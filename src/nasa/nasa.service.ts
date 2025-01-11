@@ -9,6 +9,7 @@ export class NasaService {
 
     constructor(private readonly httpService: HttpService) { }
 
+    // Method for fetching Astronomy Picture of the Day
     async getAstronomyPictureOfTheDay(): Promise<any> {
         try {
             const response: AxiosResponse = await this.httpService
@@ -17,6 +18,21 @@ export class NasaService {
             return response.data;
         } catch (error) {
             throw new InternalServerErrorException('Error fetching data from NASA API');
+        }
+    }
+
+    // Method for fetching Mars Rover Photos
+    async getMarsRoverPhotos(rover: string, sol: number, camera?: string): Promise<any> {
+        try {
+            let url = `${this.baseUrl}mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&api_key=${this.apiKey}`;
+            if (camera) {
+                url += `&camera=${camera}`;
+            }
+
+            const response: AxiosResponse = await this.httpService.get(url).toPromise();
+            return response.data;
+        } catch (error) {
+            throw new InternalServerErrorException('Error fetching Mars Rover photos');
         }
     }
 }
