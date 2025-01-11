@@ -9,7 +9,7 @@ export class NasaService {
 
     constructor(private readonly httpService: HttpService) { }
 
-    // Method for fetching Astronomy Picture of the Day
+    // Method for fetching Astronomy Picture of the Day (APOD)
     async getAstronomyPictureOfTheDay(): Promise<any> {
         try {
             const response: AxiosResponse = await this.httpService
@@ -21,8 +21,34 @@ export class NasaService {
         }
     }
 
+    // Method for searching Astronomy Picture of the Day (APOD) by date or title
+    async searchAstronomyPictureOfTheDay(
+        query: string,
+        date?: string
+    ): Promise<any> {
+        try {
+            let url = `${this.baseUrl}planetary/apod?api_key=${this.apiKey}`;
+
+            if (query) {
+                url += `&title=${query}`;  // Searching by title, if query provided
+            }
+            if (date) {
+                url += `&date=${date}`;  // Searching by date, if date provided
+            }
+
+            const response: AxiosResponse = await this.httpService.get(url).toPromise();
+            return response.data;
+        } catch (error) {
+            throw new InternalServerErrorException('Error searching for APOD');
+        }
+    }
+
     // Method for fetching Mars Rover Photos
-    async getMarsRoverPhotos(rover: string, sol: number, camera?: string): Promise<any> {
+    async getMarsRoverPhotos(
+        rover: string,
+        sol: number,
+        camera?: string
+    ): Promise<any> {
         try {
             let url = `${this.baseUrl}mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&api_key=${this.apiKey}`;
             if (camera) {

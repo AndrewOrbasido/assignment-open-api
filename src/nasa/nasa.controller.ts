@@ -20,4 +20,13 @@ export class NasaController {
     ) {
         return this.nasaService.getMarsRoverPhotos(rover, sol, camera);
     }
+
+    // Endpoint for searching Astronomy Picture of the Day (APOD) by keyword or date
+    @Get('search-apod')
+    async searchAstronomyPictureOfTheDay(
+        @Query('query') query: string,
+        @Query('date') date?: string
+    ) {
+        return this.nasaService.searchAstronomyPictureOfTheDay(query, date);
+    }
 }
